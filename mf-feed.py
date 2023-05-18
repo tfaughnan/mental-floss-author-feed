@@ -39,10 +39,11 @@ def main() -> int:
     react_data_shit = json.loads(react_data_shit_tag.text)
     for article in react_data_shit['itemListElement']:
         try:
-            article_date = datetime.datetime.fromisoformat(article['datePublished'])
+            article_date = datetime.datetime.strptime(article['datePublished'], '%Y-%m-%dT%H:%M:%SZ')
         except ValueError as e:
             logging.error(e)
             return 1
+        article_date = article_date.replace(tzinfo=datetime.timezone.utc)
 
         fe = fg.add_entry()
         fe.id(article['url'])
